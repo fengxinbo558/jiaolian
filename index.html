@@ -2,8 +2,15 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#191815" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f4ed" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="FORM" />
+    <link rel="manifest" href="/app.webmanifest" />
+    <link rel="icon" href="/icons/form-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/form-icon-192.png" />
     <meta name="description" content="使用电脑摄像头在本地识别徒手训练动作，并提供实时中文语音纠正。" />
     <title>FORM / 动作教练</title>
     <script>
@@ -426,7 +433,7 @@
             <div class="plan-builder-copy">
               <p class="eyebrow">按要求组合</p>
               <h2 id="plan-builder-title">把你的要求说清楚，先在本机生成</h2>
-              <p>例如“20 分钟轻松核心，不用器械”。现在由本地规则组合；后续接大模型时仍使用同一入口，API 密钥不会放在网页里。</p>
+              <p>例如“20 分钟轻松核心，不用器械”。系统会优先使用 AI 教练生成；云端暂不可用时自动退回本机规则，API 密钥不会放在网页里。</p>
             </div>
             <div class="plan-builder-input">
               <label class="visually-hidden" for="plan-prompt">自定义训练要求</label>
@@ -733,6 +740,7 @@
           <section class="data-privacy-card" aria-labelledby="data-privacy-title">
             <div><p class="eyebrow">数据与隐私</p><h2 id="data-privacy-title">迁移或清理本机数据</h2><p>导出文件使用你设置的密码加密；平台无法替你找回该密码。导入前不会覆盖现有数据。</p></div>
             <div class="data-privacy-actions">
+              <button class="button button-primary hidden" id="install-app-button" type="button">安装到手机桌面</button>
               <button class="button button-primary" id="data-export" type="button">导出加密备份</button>
               <button class="button button-quiet" id="data-import" type="button">导入备份</button>
               <input class="visually-hidden" id="data-import-file" type="file" accept="application/json,.formbackup" />

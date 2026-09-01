@@ -2594,3 +2594,442 @@ body[data-current-view="my"] #data-privacy-status { color: #68706a; }
   body[data-current-view="my"] .data-privacy-actions { display: grid; }
   body[data-current-view="my"] .data-privacy-actions .button { width: 100%; }
 }
+
+/* Mobile application shell: fluid across Android and iPhone, including safe areas. */
+@media (max-width: 760px) {
+  :root {
+    --mobile-topbar: calc(56px + env(safe-area-inset-top));
+    --mobile-nav: 64px;
+    --mobile-nav-gap: max(8px, env(safe-area-inset-bottom));
+    --mobile-content-bottom: calc(var(--mobile-nav) + var(--mobile-nav-gap) + 28px);
+  }
+
+  html {
+    min-width: 320px;
+    overflow-x: clip;
+    background: #f6f4ed;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100dvh;
+    overflow-x: clip;
+    overscroll-behavior-y: none;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    width: 100%;
+    height: var(--mobile-topbar);
+    box-sizing: border-box;
+    padding: env(safe-area-inset-top) 12px 0;
+    background: rgba(246,244,237,.92) !important;
+    border-bottom: 1px solid rgba(28,36,31,.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .brand {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid rgba(28,36,31,.16);
+    background: #fff;
+    color: #171c18;
+    box-shadow: 0 6px 18px rgba(32,38,33,.08);
+  }
+
+  .brand > span:last-child { display: none; }
+  .brand-mark {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: #171c18;
+    font-size: .82rem;
+  }
+
+  .topbar-actions {
+    height: 42px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .topbar-actions .system-state,
+  .topbar-actions .voice-test-button { display: none; }
+
+  .topbar-actions .icon-button,
+  .topbar-actions .sound-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid rgba(28,36,31,.16);
+    border-radius: 50%;
+    background: #fff;
+    color: #171c18;
+    box-shadow: 0 6px 18px rgba(32,38,33,.08);
+  }
+
+  .topbar-actions .icon-button span { display: none; }
+  .topbar-actions .icon-button svg { width: 19px; height: 19px; }
+
+  .app-frame,
+  body:not([data-current-view="body"]) #app-content {
+    min-height: calc(100dvh - var(--mobile-topbar));
+  }
+
+  .app-nav,
+  body[data-current-view="body"] .app-nav {
+    position: fixed;
+    z-index: 90;
+    top: auto;
+    right: 10px;
+    bottom: var(--mobile-nav-gap);
+    left: 10px;
+    width: auto;
+    height: var(--mobile-nav);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 22px;
+    background: rgba(25,27,24,.96);
+    box-shadow: 0 14px 34px rgba(18,21,18,.24);
+    transform: none;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .app-nav button,
+  body[data-current-view="body"] .app-nav button {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    min-height: 52px;
+    display: grid;
+    grid-template-rows: 19px 13px;
+    place-content: center;
+    justify-items: center;
+    gap: 4px;
+    padding: 5px 2px;
+    border-radius: 16px;
+    color: rgba(255,255,255,.62);
+  }
+
+  .app-nav button svg,
+  body[data-current-view="body"] .app-nav button svg { width: 18px; height: 18px; }
+
+  .app-nav button span,
+  body[data-current-view="body"] .app-nav button span {
+    max-width: 100%;
+    overflow: hidden;
+    color: inherit;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .app-nav button[aria-current="page"],
+  body[data-current-view="body"] .app-nav button[aria-current="page"] {
+    background: #cfe65c;
+    color: #15190e;
+  }
+
+  body[data-current-view="training"].session-running .topbar,
+  body[data-current-view="training"].session-running .app-nav { display: none; }
+
+  .view-section,
+  body[data-current-view="body"] .view-section {
+    width: calc(100% - 24px);
+    max-width: 720px;
+    min-height: calc(100dvh - var(--mobile-topbar));
+    padding: 16px 0 var(--mobile-content-bottom);
+  }
+
+  .view-section:not(.home-view) { min-height: calc(100dvh - var(--mobile-topbar)); }
+
+  .page-heading,
+  .section-heading,
+  .training-heading {
+    padding: 10px 0 18px;
+    margin-bottom: 16px;
+  }
+
+  .page-heading h1,
+  .training-heading h1,
+  body:not([data-current-view="body"]) .page-heading h1,
+  body:not([data-current-view="body"]) .training-heading h1 {
+    max-width: 18em;
+    margin-top: 5px;
+    font-size: clamp(1.8rem, 8vw, 2.35rem);
+    line-height: 1.08;
+    letter-spacing: -.045em;
+  }
+
+  .page-heading p:not(.eyebrow),
+  .training-heading p:not(.eyebrow) {
+    max-width: 34em;
+    margin-top: 10px;
+    font-size: .88rem;
+    line-height: 1.55;
+  }
+
+  .page-count { display: none; }
+  .button { min-height: 48px; white-space: nowrap; }
+  footer { padding: 18px 18px var(--mobile-content-bottom); }
+
+  /* Action library cards become compact rows instead of squeezed desktop columns. */
+  .exercise-library-grid { grid-template-columns: 1fr; gap: 10px; }
+  .exercise-library-card {
+    min-height: 126px;
+    display: grid;
+    grid-template-columns: minmax(116px, 39%) minmax(0, 1fr);
+    border-radius: 20px;
+  }
+  .exercise-card-visual { width: 100%; height: 100%; min-height: 126px; aspect-ratio: auto; }
+  .exercise-card-copy { min-width: 0; padding: 15px 14px; }
+  .exercise-card-copy strong {
+    display: block;
+    overflow: hidden;
+    font-size: 1.08rem;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .exercise-card-muscles { min-width: 0; }
+  .exercise-card-muscles small {
+    display: -webkit-box;
+    overflow: hidden;
+    line-height: 1.45;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .exercise-card-status { margin-top: 10px; }
+
+  /* Plans keep the same data but use denser mobile cards. */
+  .plan-grid { grid-template-columns: 1fr; gap: 12px; }
+  .plan-card,
+  body:not([data-current-view="body"]) .plan-personalizer .plan-recommend-grid .plan-card {
+    min-height: 0;
+    padding: 20px 18px;
+    border-radius: 22px;
+  }
+  .plan-card h3 { max-width: calc(100% - 72px); font-size: 1.35rem; line-height: 1.18; }
+  .plan-card p { margin-top: 8px; font-size: .84rem; line-height: 1.5; }
+  .plan-duration { top: 18px; right: 18px; width: 52px; height: 52px; }
+  .plan-exercises { margin-top: 20px; }
+  .plan-card-meta { margin-top: 20px; }
+  .plan-personalizer,
+  .plan-builder { padding: 20px 16px; border-radius: 22px; }
+  .plan-personalizer h2,
+  .plan-builder h2 { font-size: 1.7rem; line-height: 1.08; }
+  .plan-preference-controls,
+  .plan-builder-input { grid-template-columns: 1fr; }
+  .plan-builder-actions { grid-template-columns: 1fr 1fr; }
+  .week-progress-card { padding: 20px 18px; border-radius: 22px; }
+
+  /* Category/course detail shows the CTA and stats before the fold. */
+  .subpage-toolbar { grid-template-columns: 44px 1fr 44px; margin-bottom: 12px; }
+  .subpage-toolbar .back-button,
+  .subpage-more { width: 44px; height: 44px; }
+  .category-hero,
+  .course-hero {
+    min-height: clamp(320px, 43dvh, 430px);
+    border-radius: 22px;
+  }
+  .category-hero-copy,
+  .course-hero-copy {
+    width: 100%;
+    min-height: clamp(320px, 43dvh, 430px);
+    padding: 22px 20px 24px;
+  }
+  .category-hero-copy h1,
+  .course-hero-copy h1 { max-width: 290px; font-size: clamp(1.85rem, 8.5vw, 2.4rem); }
+  .category-levels { margin: 18px 0 28px; }
+  .category-content-section { margin-top: 30px; }
+  .category-course-card { grid-template-columns: 84px minmax(0,1fr) 32px; gap: 12px; padding: 10px; }
+  .category-course-preview { width: 84px; height: 72px; }
+  .category-action-card { grid-template-columns: 82px minmax(0,1fr); gap: 12px; }
+  .category-action-media { width: 82px; height: 70px; }
+  .course-view { padding-bottom: calc(var(--mobile-content-bottom) + 72px); }
+  .course-stat-grid { margin: 12px 0; border-radius: 18px; }
+  .course-stat-grid > div { min-height: 78px; padding: 8px; }
+  .course-stat-grid span { font-size: .68rem; }
+  .course-stat-grid strong { margin-top: 6px; font-size: 1rem; }
+  .course-coach-card { margin: 12px 0; padding: 14px; border-radius: 18px; }
+  .course-description { padding: 24px 2px; }
+  .course-description h2 { font-size: 1.5rem; }
+  .course-exercises li { grid-template-columns: 24px 72px minmax(0,1fr); gap: 10px; padding: 9px; }
+  .course-exercise-preview { width: 72px; height: 62px; }
+  .course-exercise-status { grid-column: 3; }
+  .course-start-bar {
+    position: sticky;
+    z-index: 75;
+    bottom: calc(var(--mobile-nav) + var(--mobile-nav-gap) + 14px);
+    margin: 16px 0 0;
+    padding: 8px;
+    border-radius: 20px;
+  }
+
+  /* AI is a conversation viewport, not a long content card. */
+  .ai-coach-view { display: flex; flex-direction: column; }
+  .ai-coach-heading { display: grid; gap: 12px; padding-top: 4px; }
+  .ai-coach-heading h1 { font-size: 2rem; }
+  .ai-heading-actions { justify-content: flex-start; }
+  .ai-context-strip { padding: 10px 12px; font-size: .72rem; line-height: 1.4; }
+  .ai-conversation {
+    flex: 1 1 auto;
+    min-height: 42dvh;
+    max-height: none;
+    margin: 10px 0;
+    padding: 14px;
+    border-radius: 20px;
+  }
+  .ai-empty-state { margin: 36px auto; }
+  .ai-empty-state h2 { font-size: 1.75rem; }
+  .ai-quick-actions { display: grid; margin-top: 22px; }
+  .ai-quick-actions button { min-height: 44px; }
+  .ai-message { max-width: 94%; }
+  .ai-message-user { max-width: 88%; }
+  .ai-message > p { padding: 13px 14px; font-size: .9rem; line-height: 1.6; }
+  .ai-composer {
+    position: sticky;
+    z-index: 74;
+    bottom: calc(var(--mobile-nav) + var(--mobile-nav-gap) + 8px);
+    padding: 9px;
+    border-radius: 18px;
+  }
+  .ai-composer textarea { min-height: 52px; max-height: 128px; padding: 9px; resize: none; }
+  .ai-composer textarea {
+    border: 1px solid rgba(28,36,31,.14);
+    border-radius: 13px;
+    background: #f4f2ea;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  }
+  .ai-composer textarea::placeholder { color: #747b75; opacity: 1; }
+  .ai-composer > div { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 8px; }
+  .ai-composer span { overflow: hidden; font-size: .66rem; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+  .ai-composer .button { min-width: 72px; width: auto; padding: 0 16px; white-space: nowrap; }
+  body:has(#ai-input:focus) .app-nav { display: none; }
+  body:has(#ai-input:focus) .ai-composer { bottom: max(8px, env(safe-area-inset-bottom)); }
+
+  /* Training prioritizes the camera and current instruction. */
+  .training-view { width: 100%; padding-top: 8px; }
+  .training-heading { padding-inline: 12px; }
+  .camera-frame {
+    height: min(66dvh, 680px);
+    min-height: 480px;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  .coach-overlay { margin: 10px 12px 0; padding: 14px; border-radius: 18px; }
+  .coach-overlay strong { font-size: 1rem; line-height: 1.45; }
+  .controls { grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 12px 0; }
+  .controls .button { min-width: 0; min-height: 48px; padding: 0 10px; font-size: .88rem; }
+  .controls-help,
+  .inline-error { margin-right: 12px; margin-left: 12px; font-size: .74rem; }
+  .training-sidebar { gap: 10px; margin: 12px; }
+  .last-rep-card,
+  .motion-readout { padding: 16px; border-radius: 20px; }
+  .last-rep-card > strong { font-size: 1.3rem; line-height: 1.25; }
+  .last-rep-card p { font-size: .84rem; line-height: 1.5; }
+  body[data-current-view="training"].session-running .training-view { min-height: 100dvh; padding: 0 0 max(12px,env(safe-area-inset-bottom)); }
+  body[data-current-view="training"].session-running .training-heading { display: none; }
+  body[data-current-view="training"].session-running .camera-frame { height: min(72dvh, 760px); min-height: 520px; }
+  body[data-current-view="training"].session-running .controls {
+    position: sticky;
+    z-index: 76;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    padding: 8px;
+    border: 1px solid rgba(28,36,31,.12);
+    border-radius: 18px;
+    background: rgba(246,244,237,.94);
+    backdrop-filter: blur(16px);
+  }
+  body[data-current-view="training"].session-running .motion-readout { display: none; }
+  body[data-current-view="training"].session-running .setup-guide { display: none; }
+
+  /* Personal area stays compact; install is a first-class local-device action. */
+  body[data-current-view="my"] .my-entry-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  body[data-current-view="my"] .my-entry-grid button { min-height: 116px; padding: 16px 48px 16px 16px; border-radius: 20px; }
+  body[data-current-view="my"] .my-entry-grid strong { font-size: 1.35rem; }
+  body[data-current-view="my"] .my-entry-grid small { font-size: .72rem; }
+  body[data-current-view="my"] .data-privacy-card { padding: 20px 16px; }
+  body[data-current-view="my"] .data-privacy-actions { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 359px) {
+  .app-nav,
+  body[data-current-view="body"] .app-nav { right: 6px; left: 6px; padding-inline: 4px; }
+  .app-nav button span,
+  body[data-current-view="body"] .app-nav button span { font-size: 9px; }
+  .exercise-library-card { grid-template-columns: 108px minmax(0,1fr); }
+  body[data-current-view="my"] .my-entry-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 920px) and (orientation: landscape) {
+  :root { --mobile-topbar: calc(48px + env(safe-area-inset-top)); }
+  .topbar { height: var(--mobile-topbar); }
+  .brand,
+  .topbar-actions,
+  .topbar-actions .icon-button { height: 38px; min-height: 38px; }
+  .brand,
+  .topbar-actions .icon-button { width: 38px; min-width: 38px; }
+  .app-nav,
+  body[data-current-view="body"] .app-nav {
+    position: fixed;
+    z-index: 90;
+    top: auto;
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: max(10px, env(safe-area-inset-left));
+    width: auto;
+    height: 60px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    gap: 2px;
+    padding: 4px;
+    border-radius: 20px;
+  }
+  .app-nav button,
+  body[data-current-view="body"] .app-nav button {
+    width: 100%;
+    min-width: 0;
+    height: 50px;
+    min-height: 50px;
+    display: grid;
+    grid-template-rows: 18px 13px;
+    place-content: center;
+    justify-items: center;
+    gap: 3px;
+    padding: 4px 2px;
+  }
+  .app-nav button span,
+  body[data-current-view="body"] .app-nav button span {
+    font-size: 10px;
+    line-height: 13px;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+  body[data-current-view="training"].session-running .camera-frame { height: 100dvh; min-height: 0; }
+  body[data-current-view="training"].session-running .coach-overlay { position: absolute; right: 12px; bottom: 76px; left: 52%; }
+}
+
+@media (display-mode: standalone) and (max-width: 760px) {
+  :root { --mobile-nav-gap: max(8px, env(safe-area-inset-bottom)); }
+  body { overscroll-behavior: none; }
+}

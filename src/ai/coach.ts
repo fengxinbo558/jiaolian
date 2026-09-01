@@ -192,7 +192,7 @@ function catalogGuidance(profile: ExerciseCoachProfile, context: CoachContext): 
     text,
     evidence: [profile.name, `主要训练：${profile.primaryMuscles.join("、")}`, ...profileEvidence(context)].slice(0, 4),
     source: "local",
-    notice: "当前由本机动作库回答；接入 DeepSeek 后会进一步结合多轮对话调整。",
+    notice: "当前由本机动作库回答；云端教练可用时会进一步结合多轮对话调整。",
   };
 }
 
@@ -210,7 +210,7 @@ function localCoachReply(message: string, context: CoachContext, history: CoachM
   const question = effectiveQuestion(message, history);
   const compact = question.replace(/\s+/g, "");
   const local = (text: string, evidence: string[]): CoachAnswer => ({
-    text, evidence, source: "local", notice: "当前由本机教练回答；接入 DeepSeek 后会提供更灵活的多轮分析。",
+    text, evidence, source: "local", notice: "当前由本机教练回答；云端教练可用时会提供更灵活的多轮分析。",
   });
 
   if (RISK_WORDS.test(compact) && !NEGATED_RISK.test(compact)) {

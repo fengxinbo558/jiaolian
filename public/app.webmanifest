@@ -1,0 +1,29 @@
+{
+  "id": "/",
+  "name": "FORM 动作教练",
+  "short_name": "FORM",
+  "description": "本机动作识别、实时语音纠正与训练计划",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f6f4ed",
+  "theme_color": "#f6f4ed",
+  "orientation": "any",
+  "lang": "zh-CN",
+  "categories": ["fitness", "health", "sports"],
+  "icons": [
+    {
+      "src": "/icons/form-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/form-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

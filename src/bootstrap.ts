@@ -3,6 +3,54 @@ import { installPrivacySafeErrorReporting } from "./error-reporting";
 
 type SessionResponse = { authenticated: boolean; accountId?: string; inviteRequired?: boolean; devHint?: string };
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
+function installProgressiveWebApp(): void {
+  if ("serviceWorker" in navigator && import.meta.env.PROD) {
+    window.addEventListener("load", () => void navigator.serviceWorker.register("/sw.js"));
+  }
+
+  let installPrompt: BeforeInstallPromptEvent | null = null;
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+    || ("standalone" in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event as BeforeInstallPromptEvent;
+    const button = document.querySelector<HTMLButtonElement>("#install-app-button");
+    button?.classList.remove("hidden");
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector<HTMLButtonElement>("#install-app-button");
+    const status = document.querySelector<HTMLElement>("#data-privacy-status");
+    if (!button || isStandalone) return;
+    if (isIos) {
+      button.classList.remove("hidden");
+      button.textContent = "添加到主屏幕";
+    }
+    button.addEventListener("click", async () => {
+      if (installPrompt) {
+        await installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        if (status) status.textContent = choice.outcome === "accepted" ? "已开始安装，之后可从手机桌面打开。" : "已取消安装，稍后仍可再次操作。";
+        installPrompt = null;
+        if (choice.outcome === "accepted") button.classList.add("hidden");
+        return;
+      }
+      if (status) status.textContent = isIos
+        ? "在 Safari 底部点“分享”，再选择“添加到主屏幕”。"
+        : "请在浏览器菜单中选择“安装应用”或“添加到主屏幕”。";
+    });
+  });
+}
+
+installProgressiveWebApp();
+
 async function resolveAccountId(): Promise<string> {
   if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "1") {
     return "local-preview-account";
@@ -31,7 +79,7 @@ function waitForAuthentication(session: SessionResponse): Promise<string> {
     </div>`;
   const style = document.createElement("style");
   style.textContent = `
-    .auth-locked body > *:not(.invite-gate){display:none!important}.invite-gate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:24px;background:#f3f0e9;color:#171916;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}.invite-card{width:min(520px,100%);box-sizing:border-box;padding:clamp(28px,6vw,54px);border:1px solid #dedbd2;border-radius:32px;background:#fffdf9;box-shadow:0 30px 90px rgba(42,39,31,.14)}.invite-brand{display:inline-flex;padding:10px 14px;border:1px solid #dedbd2;border-radius:999px;font-weight:800}.invite-eyebrow{margin:44px 0 8px;color:#74802b;font-size:.75rem;font-weight:800;letter-spacing:.12em}.invite-card h1{margin:0 0 16px;font-size:clamp(2.3rem,8vw,4.2rem);line-height:1;letter-spacing:-.06em}.invite-copy{color:#73776f;line-height:1.7}.invite-tabs{display:flex;gap:8px;margin:28px 0 16px}.invite-tabs button{min-height:40px;padding:0 16px;border:1px solid #dedbd2;border-radius:999px;background:transparent;font:inherit}.invite-tabs button[aria-pressed=true]{background:#222821;color:white}.invite-card label{display:grid;gap:8px;font-weight:700}.invite-card input{height:54px;padding:0 16px;border:1px solid #cfcfc7;border-radius:14px;background:white;font:inherit;font-size:1rem}.invite-submit{width:100%;height:54px;margin-top:14px;border:0;border-radius:999px;background:#d5ef5b;color:#151914;font:inherit;font-weight:800;cursor:pointer}.invite-status{min-height:24px;margin:16px 0 0;color:#73776f;font-size:.78rem;line-height:1.5}.recovery-result{margin-top:22px;padding:18px;border-radius:18px;background:#222821;color:white}.recovery-result strong{display:block;margin:8px 0;font-size:1.25rem;letter-spacing:.06em;word-break:break-all}.recovery-result button{height:44px;padding:0 16px;border:0;border-radius:999px;background:#d5ef5b;font:inherit;font-weight:800}`;
+    .auth-locked body > *:not(.invite-gate){display:none!important}.invite-gate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));overflow:auto;background:#f3f0e9;color:#171916;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}.invite-card{width:min(520px,100%);box-sizing:border-box;padding:clamp(28px,6vw,54px);border:1px solid #dedbd2;border-radius:32px;background:#fffdf9;box-shadow:0 30px 90px rgba(42,39,31,.14)}.invite-brand{display:inline-flex;padding:10px 14px;border:1px solid #dedbd2;border-radius:999px;font-weight:800}.invite-eyebrow{margin:44px 0 8px;color:#74802b;font-size:.75rem;font-weight:800;letter-spacing:.12em}.invite-card h1{margin:0 0 16px;font-size:clamp(2.3rem,8vw,4.2rem);line-height:1;letter-spacing:-.06em}.invite-copy{color:#73776f;line-height:1.7}.invite-tabs{display:flex;gap:8px;margin:28px 0 16px}.invite-tabs button{min-height:44px;padding:0 16px;border:1px solid #dedbd2;border-radius:999px;background:transparent;font:inherit}.invite-tabs button[aria-pressed=true]{background:#222821;color:white}.invite-card label{display:grid;gap:8px;font-weight:700}.invite-card input{width:100%;box-sizing:border-box;height:54px;padding:0 16px;border:1px solid #cfcfc7;border-radius:14px;background:white;font:inherit;font-size:1rem}.invite-submit{width:100%;height:54px;margin-top:14px;border:0;border-radius:999px;background:#d5ef5b;color:#151914;font:inherit;font-weight:800;cursor:pointer}.invite-status{min-height:24px;margin:16px 0 0;color:#73776f;font-size:.78rem;line-height:1.5}.recovery-result{margin-top:22px;padding:18px;border-radius:18px;background:#222821;color:white}.recovery-result strong{display:block;max-height:5.2em;overflow:hidden;margin:8px 0;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);font-size:.88rem;line-height:1.45;letter-spacing:.03em;word-break:break-all}.recovery-result[data-expanded=true] strong{max-height:none}.recovery-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.recovery-result button{min-height:44px;padding:0 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:transparent;color:white;font:inherit;font-weight:700}.recovery-result .recovery-enter{grid-column:1/-1;border:0;background:#d5ef5b;color:#151914}@media(max-width:580px){.invite-gate{place-items:end center;padding-inline:10px}.invite-card{padding:24px 20px max(20px,env(safe-area-inset-bottom));border-radius:28px}.invite-eyebrow{margin-top:26px}.invite-card h1{font-size:clamp(2rem,10vw,2.8rem)}.invite-copy{font-size:.92rem;line-height:1.55}.invite-tabs{margin-top:20px}.recovery-actions{grid-template-columns:1fr}.recovery-result .recovery-enter{grid-column:auto}}`;
   document.head.append(style);
   document.body.append(shell);
   return new Promise((resolve) => {
@@ -68,14 +116,30 @@ function waitForAuthentication(session: SessionResponse): Promise<string> {
         if (result.recoveryCode) {
           const recovery = document.createElement("div");
           recovery.className = "recovery-result";
-          recovery.innerHTML = `<span>只显示这一次，请保存账户恢复码</span><strong></strong><button type="button">我已保存，进入 FORM</button>`;
+          recovery.innerHTML = `<span>只显示这一次，请保存账户恢复码</span><strong></strong><div class="recovery-actions"><button class="recovery-copy" type="button">复制恢复码</button><button class="recovery-toggle" type="button">展开查看</button><button class="recovery-enter" type="button">我已保存，进入 FORM</button></div>`;
           recovery.querySelector("strong")!.textContent = result.recoveryCode;
           shell.querySelector(".invite-tabs")?.remove();
           shell.querySelector("label")?.remove();
           submit.remove();
           status.remove();
           shell.querySelector(".invite-card")?.append(recovery);
-          recovery.querySelector("button")!.addEventListener("click", () => finish(result.accountId!));
+          recovery.querySelector<HTMLButtonElement>(".recovery-copy")!.addEventListener("click", async (event) => {
+            const button = event.currentTarget as HTMLButtonElement;
+            try {
+              await navigator.clipboard.writeText(result.recoveryCode!);
+              button.textContent = "已复制";
+            } catch {
+              recovery.dataset.expanded = "true";
+              recovery.querySelector<HTMLButtonElement>(".recovery-toggle")!.textContent = "收起";
+              button.textContent = "请长按上方恢复码复制";
+            }
+          });
+          recovery.querySelector<HTMLButtonElement>(".recovery-toggle")!.addEventListener("click", (event) => {
+            const expanded = recovery.dataset.expanded !== "true";
+            recovery.dataset.expanded = String(expanded);
+            (event.currentTarget as HTMLButtonElement).textContent = expanded ? "收起" : "展开查看";
+          });
+          recovery.querySelector<HTMLButtonElement>(".recovery-enter")!.addEventListener("click", () => finish(result.accountId!));
           return;
         }
         finish(result.accountId);
