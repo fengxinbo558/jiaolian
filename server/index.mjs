@@ -20,6 +20,7 @@ const mimeTypes = {
   ".svg": "image/svg+xml",
   ".webm": "video/webm",
   ".wasm": "application/wasm",
+  ".webp": "image/webp",
   ".woff": "font/woff",
   ".woff2": "font/woff2",
 };

@@ -127,8 +127,8 @@ describe("exercise media profiles", () => {
       expect(profile.media.kind).toBe("project-generated");
       expect(profile.media.licenseStatus).toBe("owned");
       expect(profile.media.reviewStatus).toBe("verified");
-      expect(profile.media.thumbnailUrl).toMatch(/generated-batch-0[12]\/.*-keyframes\.png$/);
-      expect(profile.media.animationUrl).toMatch(/generated-batch-0[12]\/.*\.gif$/);
+      expect(profile.media.thumbnailUrl).toMatch(/generated-batch-0[12]\/.*-keyframes\.webp$/);
+      expect(profile.media.animationUrl).toMatch(/generated-batch-0[12]\/.*\.webp$/);
       expect(profile.primaryMuscles.length).toBeGreaterThan(0);
       expect(profile.secondaryMuscles.length).toBeGreaterThan(0);
       expect(profile.activationCue.length).toBeGreaterThan(6);
