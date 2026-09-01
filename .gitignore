@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.runtime/
+.superpowers/
+reference/
+FORM 健身教练.app/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+.form-auth-state.json
